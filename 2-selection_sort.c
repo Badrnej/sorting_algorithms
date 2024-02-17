@@ -30,7 +30,7 @@ void selection_sort(int *array, size_t size)
 	if (array == NULL || size < 2)
 		return;
 
-	for (b = 0; a < size - 1; a++)
+	for (a = 0; a < size - 1; a++)
 	{
 		min = array + a;
 		for (b = a + 1; b < size; b++)
