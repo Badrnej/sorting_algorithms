@@ -3,7 +3,7 @@
 
 /**
  * bubble_sort - Sorts array of integers in ascending 
- *               order using Bubble sort.
+ * order using Bubble sort.
  * @array: data to sort
  * @size: size of data
  * Return: No Return
