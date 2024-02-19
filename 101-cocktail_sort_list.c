@@ -1,5 +1,4 @@
 #include "sort.h"
-
 /**
  * _swap - Swaps two nodes of doubly linked list
  * @node: node base to change
@@ -8,30 +7,23 @@
  */
 void _swap(listint_t **node, listint_t **list)
 {
-	listint_t *tmp = *node, *tmp2, *tmp3;
-
+	listint_t *tmp = *node, *tmp2;
 
 	if (!(*node)->prev)
 		*list = (*node)->next;
 
-	tmp = tmp3 = *node;
 	tmp2 = tmp->next;
 
 	tmp->next = tmp2->next;
-	tmp3 = tmp->prev;
-	tmp->prev = tmp2;
-	tmp2->next = tmp;
-	tmp2->prev = tmp3;
-
-	if (tmp2->prev)
-		tmp2->prev->next = tmp2;
-
-
 	if (tmp->next)
 		tmp->next->prev = tmp;
 
+	tmp2->prev = tmp->prev;
+	if (tmp2->prev)
+		tmp2->prev->next = tmp2;
+	tmp->prev = tmp2;
+	tmp2->next = tmp;
 	*node = tmp2;
-
 }
 /**
  * cocktail_sort_list - function that sorts a doubly linked list
@@ -42,43 +34,49 @@ void _swap(listint_t **node, listint_t **list)
 void cocktail_sort_list(listint_t **list)
 {
 	listint_t *head, *aux;
-	int a = 0, b = -1, c = -1;
+	int a, b, c;
 
 	if (!list || !(*list) || (!((*list)->prev) && !((*list)->next)))
 		return;
-
-	head = *list;
-	while (c >= b)
+	while (1)
 	{
-		b++;
-		while (head->next && a != c)
+		a = 0;
+		b = -1;
+		c = -1;
+		head = *list;
+		while (c >= b)
 		{
-			if (head->b > head->next->b)
+			b++;
+			while (head->next && a != c)
 			{
-				aux = head;
-			       _swap(&aux, list);
-			       print_list(*list);
-			       head = aux;
+				if (head->n > head->next->n)
+				{
+					aux = head;
+					_swap(&aux, list);
+					print_list(*list);
+					head = aux;
+				}
+				a++;
+				head = head->next;
 			}
-
-			a++;
-			head = head->next;
-		}
-
-		if (b == 0)
-			c = a;
-		c--;
-		while (head->prev && a >= b)
-		{
-			if (head->b < head->prev->b)
+			if (b == 0)
+				c = a;
+			c--;
+			while (head->prev && a >= b)
 			{
-				aux = head->prev;
-				_swap(&aux, list);
-				print_list(*list);
-				head = aux->next;
+				if (head->n < head->prev->n)
+				{
+					aux = head->prev;
+					_swap(&aux, list);
+					print_list(*list);
+					head = aux->next;
+				}
+				a--;
+				head = head->prev;
 			}
-			a--;
-			head = head->prev;
 		}
+		if (a <= 1)
+			break;
 	}
 }
+
