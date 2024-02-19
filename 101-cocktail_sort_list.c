@@ -9,8 +9,8 @@ void _swap(listint_t **node, listint_t **list)
 {
 	listint_t *tmp = *node, *tmp2;
 
-	if (!(*node)->prev)
-		*list = (*node)->next;
+	if (!tmp || !tmp->next)
+		return;
 
 	tmp2 = tmp->next;
 
@@ -21,10 +21,16 @@ void _swap(listint_t **node, listint_t **list)
 	tmp2->prev = tmp->prev;
 	if (tmp2->prev)
 		tmp2->prev->next = tmp2;
+
 	tmp->prev = tmp2;
 	tmp2->next = tmp;
+
+	if (!tmp2->prev)
+		*list = tmp2;
+
 	*node = tmp2;
 }
+
 /**
  * cocktail_sort_list - function that sorts a doubly linked list
  * of integers in ascending order using the Cocktail shaker sort algorithm
