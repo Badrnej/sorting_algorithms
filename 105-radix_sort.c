@@ -1,6 +1,13 @@
 #include <stdlib.h>
 #include "sort.h"
 
+/**
+ * csort2 - This function is a helper function for counting sort.
+ * @arr: An array of integers.
+ * @size: The size of the array.
+ * @buff: a buffer
+ * @lsd: being considered.
+ */
 void csort2(int *arr, int **buff, int size, int lsd)
 {
 	int i, j, csize = 10, num;
@@ -28,7 +35,15 @@ void csort2(int *arr, int **buff, int size, int lsd)
 	print_array(arr, size);
 }
 
+/**
+ * csort - his function performs the counting sort algorithm
+ *		on the given array arr with size.
+ * @arr: An array of integers.
+ * @size: based on the current digit position
+ * @lsd: It counts the occurrences of each digit
+ */
 void csort(int *arr, int size, int lsd)
+
 {
 	int c[10] = {0};
 	int i, j, num, csize = 10, **buff;
@@ -64,7 +79,14 @@ void csort(int *arr, int size, int lsd)
 	free(buff);
 }
 
+/**
+ * radix_sort - Sort an array of integers in ascending
+ *              order using the radix sort algorithm.
+ * @arr: An array of integers.
+ * @size: The size of the array.
+ */
 void radix_sort(int *arr, size_t size)
+
 {
 	if (size < 2)
 		return;
