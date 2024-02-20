@@ -1,142 +1,78 @@
 #include "sort.h"
+#include <stdio.h>
 
-void caller_bitonic(int *array, int start, int s_size, int dir, int f_size);
-void merger_bitonic(int *array, int start, int s_size, int dir, int f_size);
-
-
-/**
- * swap- swap two elements in array
- * @low: int
- * @high: int
- * Return: always 0
- */
-
-
-void swap(int *low, int *high)
+void print(int *arr, int r1, int r2)
 {
-	int temp;
+	int i;
 
-	temp = *low;
-	*low = *high;
-	*high = temp;
-}
-
-
-/**
- * print_array2 - Customized print_array
- * @array: The array to be printed
- * @start: starting index
- * @end: ending index
- * Return: always 0
- */
-void print_array2(const int *array, size_t start, size_t end)
-{
-	size_t i;
-
-	i = start;
-	while (array && i <= end)
+	for (i = r1; i <= r2; i++)
 	{
-		if (i > start)
+		if (i > r1)
 			printf(", ");
-		printf("%d", array[i]);
-		++i;
+		printf("%d", arr[i]);
 	}
 	printf("\n");
 }
 
-/**
- * bitonic_sort - sort via bitonic method
- * @array: int
- * @size: size_t
- * Return: always 0
- */
-
-void bitonic_sort(int *array, size_t size)
+void swap(int *arr, int i, int j, int dir)
 {
-	int dir = 1;
+	int tmp;
 
-	if (size < 2 || !array)
-		return;
-
-	caller_bitonic(array, 0, size, dir, size);
-
-}
-
-/**
- * caller_bitonic - recursive bitonic function
- * @array: int
- * @start: int
- * @s_size: int
- * @dir: int
- * @f_size: int
- * Return: always 0
- */
-
-void caller_bitonic(int *array, int start, int s_size, int dir, int f_size)
-{
-	if (s_size > 1)
+	if (dir == (arr[i] > arr[j]))
 	{
-
-		int s = s_size / 2;
-
-		printf("Merging [%d/%d] ", s_size, f_size);
-		printf(dir == 1 ? "(UP):\n" : "(DOWN):\n");
-		print_array2(array, start, start + s_size - 1);
-
-		caller_bitonic(array, start, s, 1, f_size);
-
-		caller_bitonic(array, start + s, s, -1, f_size);
-
-		merger_bitonic(array, start, s_size, dir, f_size);
-
-		printf("Result [%d/%d] ", s_size, f_size);
-		printf(dir == 1 ? "(UP):\n" : "(DOWN):\n");
-		print_array2(array, start, start + s_size - 1);
-
+		tmp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = tmp;
 	}
-
 }
 
-/**
- * merger_bitonic - merge the bitonic sub arrays
- * @array: int
- * @start: int
- * @s_size: int
- * @dir: int
- * @f_size:int
- * Return: always 0
- */
-
-void merger_bitonic(int *array, int start, int s_size, int dir, int f_size)
+void bitonic_merge(int *arr, int low, int size, int dir, const int r_size)
 {
+	int k = size, i = low;
 
-	if (s_size > 1)
+	if (size > 1)
 	{
-		int s = s_size / 2;
-		int i = start;
+		k = size / 2;
+		for (i = low; i < low + k; i++)
+			swap(arr, i, i + k, dir);
+		bitonic_merge(arr, low, k, dir, r_size);
+		bitonic_merge(arr, low + k, k, dir, r_size);
+	}
+}
 
-		while (i < s + start)
+void sort(int *arr, int low, int size, int dir, const int r_size)
+{
+	int k = size;
+
+	if (size > 1)
+	{
+		if (dir == 1)
+			printf("Merging [%d/%d] (UP):\n", size, r_size);
+		if (dir == 0)
+			printf("Merging [%d/%d] (DOWN):\n", size, r_size);
+		print(arr, low, low + k - 1);
+		k = size / 2;
+		sort(arr, low, k, 1, r_size);
+		sort(arr, low + k, k, 0, r_size);
+		bitonic_merge(arr, low, size, dir, r_size);
+		if (dir == 1)
 		{
-
-			if (dir == 1)
-			{
-				if (array[i] > array[i + s])
-					swap(&array[i], &array[i + s]);
-			}
-
-			else
-			{
-				if (array[i] < array[i + s])
-					swap(&array[i], &array[i + s]);
-			}
-
-			i++;
-
+			printf("Result [%d/%d] (UP):\n", size, r_size);
+			print(arr, low, low + 2 * k - 1);
 		}
-
-
-		merger_bitonic(array, start, s, dir, f_size);
-		merger_bitonic(array, start + s, s, dir, f_size);
-
+		if (dir == 0)
+		{
+			printf("Result [%d/%d] (DOWN):\n", size, r_size);
+			print(arr, low, low + 2 * k - 1);
+		}
 	}
-}
+
+	void bitonic_sort(int *arr, size_t size)
+	{
+		int up = 1;
+		const int r_size = (int)size;
+
+		if (size < 2 || !arr)
+			return;
+		sort(arr, 0, (int)size, up, r_size);
+	}
